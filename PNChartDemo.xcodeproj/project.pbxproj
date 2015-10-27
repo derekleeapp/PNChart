@@ -20,6 +20,7 @@
 		0AF7A87B182AA9F6003645C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AF7A879182AA9F6003645C4 /* Main.storyboard */; };
 		0AF7A880182AA9F6003645C4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AF7A87F182AA9F6003645C4 /* Images.xcassets */; };
 		0AF7A8AF182AAEEF003645C4 /* PCChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7A8AE182AAEEF003645C4 /* PCChartViewController.m */; };
+		525FD40D1BDFB1F3007C9FB5 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 525FD40C1BDFB1F3007C9FB5 /* Launch Screen.storyboard */; };
 		5C728F7B8AACCC0864A63B26 /* libPods-PNChartTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0A0D7DDAB496680487BF1E5 /* libPods-PNChartTests.a */; };
 		5C9B4AA31B05BBCB00093EBE /* PNBarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9B4AA21B05BBCB00093EBE /* PNBarChart.m */; };
 		6E984E5D1AE2B00600E817A0 /* PNBarChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E984E5C1AE2B00600E817A0 /* PNBarChartTests.m */; };
@@ -76,6 +77,7 @@
 		2980CA20C29DC029B2D0B926 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		3BA6321352024B1FBA0158B0 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D54B84CA1CAEB2BBBC9DCFA /* Pods-PNChartTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PNChartTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PNChartTests/Pods-PNChartTests.release.xcconfig"; sourceTree = "<group>"; };
+		525FD40C1BDFB1F3007C9FB5 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		5C9B4AA21B05BBCB00093EBE /* PNBarChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNBarChart.m; sourceTree = "<group>"; };
 		6E984E511AE2AF2D00E817A0 /* PNChartTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PNChartTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E984E541AE2AF2D00E817A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 		0AF7A86E182AA9F6003645C4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				525FD40C1BDFB1F3007C9FB5 /* Launch Screen.storyboard */,
 				0AF7A86F182AA9F6003645C4 /* PNChartDemo-Info.plist */,
 				0AF7A870182AA9F6003645C4 /* InfoPlist.strings */,
 				0AF7A873182AA9F6003645C4 /* main.m */,
@@ -361,6 +364,7 @@
 			files = (
 				0AF7A880182AA9F6003645C4 /* Images.xcassets in Resources */,
 				0AF7A872182AA9F6003645C4 /* InfoPlist.strings in Resources */,
+				525FD40D1BDFB1F3007C9FB5 /* Launch Screen.storyboard in Resources */,
 				0AF7A87B182AA9F6003645C4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
