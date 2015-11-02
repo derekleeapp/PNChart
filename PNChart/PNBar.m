@@ -197,12 +197,12 @@
     CGFloat textWidth = self.bounds.size.width;
 
     [_chartLine addSublayer:self.textLayer];
-    [self.textLayer setFontSize:18.0];
+    [self.textLayer setFontSize:self.barValueLabelFont.pointSize];
 
     [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
 
     CGSize labelSize = CGSizeMake(320,2000); //设置一个行高上限
-    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
+    NSDictionary *attributes = @{ NSFontAttributeName : self.barValueLabelFont };
     labelSize = [self.textLayer.string boundingRectWithSize:labelSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
 
     float verticalY;

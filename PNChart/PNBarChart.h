@@ -98,7 +98,9 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (strong, nonatomic) UIColor *labelTextColorAboveBar;
 
 /** Font for all bars in the chart. */
-@property (nonatomic) UIFont * labelFont;
+@property (nonatomic) UIFont *xValueLabelFont;
+@property (nonatomic) UIFont *yValueLabelFont;
+@property (nonatomic) UIFont *barValueLabelFont;
 
 /** How many labels on the x-axis to skip in between displaying labels. */
 @property (nonatomic) NSInteger xLabelSkip;
