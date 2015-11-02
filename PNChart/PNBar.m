@@ -31,6 +31,7 @@
         self.clipsToBounds      = YES;
         [self.layer addSublayer:_chartLine];
         self.barRadius = 2.0;
+        self.verticalAlignment = PNBarChartBarLabelVerticalAlignmentCenter;
     }
 
     return self;
@@ -65,7 +66,7 @@
     }
 
     if (_grade) {
-        
+
         CABasicAnimation * pathAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
         pathAnimation.fromValue = (id)_chartLine.path;
         pathAnimation.toValue = (id)[progressline CGPath];
@@ -73,20 +74,20 @@
         pathAnimation.autoreverses = NO;
         pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         [_chartLine addAnimation:pathAnimation forKey:@"animationKey"];
-        
+
         _chartLine.path = progressline.CGPath;
-        
+
         if (_barColorGradientStart) {
-            
+
             // Add gradient
             [self.gradientMask addAnimation:pathAnimation forKey:@"animationKey"];
             self.gradientMask.path = progressline.CGPath;
-  
+
             CABasicAnimation* opacityAnimation = [self fadeAnimation];
             [self.textLayer addAnimation:opacityAnimation forKey:nil];
 
         }
-        
+
     }else{
         CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
         pathAnimation.duration = 1.0;
@@ -94,13 +95,13 @@
         pathAnimation.fromValue = @0.0f;
         pathAnimation.toValue = @1.0f;
         [_chartLine addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-        
+
         _chartLine.strokeEnd = 1.0;
-        
+
         _chartLine.path = progressline.CGPath;
         // Check if user wants to add a gradient from the start color to the bar color
         if (_barColorGradientStart) {
-            
+
             // Add gradient
             self.gradientMask = [CAShapeLayer layer];
             self.gradientMask.fillColor = [[UIColor clearColor] CGColor];
@@ -108,8 +109,8 @@
             self.gradientMask.lineWidth    = self.frame.size.width;
             self.gradientMask.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
             self.gradientMask.path = progressline.CGPath;
-            
-            
+
+
             CAGradientLayer *gradientLayer = [CAGradientLayer layer];
             gradientLayer.startPoint = CGPointMake(0.0,0.0);
             gradientLayer.endPoint = CGPointMake(1.0 ,0.0);
@@ -121,11 +122,11 @@
                                 (__bridge id)self.barColor.CGColor
                                 ];
             gradientLayer.colors = colors;
-            
+
             [gradientLayer setMask:self.gradientMask];
-            
+
             [_chartLine addSublayer:gradientLayer];
-            
+
             self.gradientMask.strokeEnd = 1.0;
             [self.gradientMask addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
 
@@ -133,7 +134,7 @@
             [self.textLayer addAnimation:opacityAnimation forKey:nil];
         }
     }
-    
+
     _grade = grade;
 
 }
@@ -182,7 +183,7 @@
         [_textLayer setString:@"0"];
         [_textLayer setAlignmentMode:kCAAlignmentCenter];
         [_textLayer setForegroundColor:[_labelTextColor CGColor]];
-       _textLayer.hidden = YES;
+        _textLayer.hidden = YES;
 
     }
 
@@ -196,65 +197,83 @@
 
 -(void)setGradeFrame:(CGFloat)grade startPosY:(CGFloat)startPosY
 {
-    CGFloat textheigt = self.bounds.size.height*self.grade;
-  
-    CGFloat topSpace = self.bounds.size.height * (1-self.grade);
+    CGFloat textheight = self.bounds.size.height * self.grade;
+
+    CGFloat topSpace = self.bounds.size.height * (1 - self.grade);
     CGFloat textWidth = self.bounds.size.width;
-  
+
     [_chartLine addSublayer:self.textLayer];
     [self.textLayer setFontSize:18.0];
-  
-    [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
-  
-    CGSize size = CGSizeMake(320,2000); //设置一个行高上限
-    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
-    size = [self.textLayer.string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
-    float verticalY ;
-  
-    if (size.height>=textheigt) {
-      
-      verticalY = topSpace - size.height;
-    } else {
-      verticalY = topSpace +  (textheigt-size.height)/2.0;
-    }
-  
-    [self.textLayer setFrame:CGRectMake((textWidth-size.width)/2.0,verticalY, size.width,size.height)];
-    self.textLayer.contentsScale = [UIScreen mainScreen].scale;
 
+    [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
+
+    CGSize labelSize = CGSizeMake(320,2000); //设置一个行高上限
+    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
+    labelSize = [self.textLayer.string boundingRectWithSize:labelSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
+
+    float verticalY;
+
+    // If the height of the label is less than the height of the bar, place the label above the bar.
+    if (labelSize.height >= textheight) {
+
+        if (self.verticalAlignment == PNBarChartBarLabelVerticalAlignmentBottom) {
+            // Bottom Vertical Alignment
+            verticalY = self.bounds.size.height - labelSize.height;
+        } else {
+            // Above the bar (for Center and Top vertical alignment)
+            verticalY = topSpace - labelSize.height;
+        }
+
+    } else {
+
+        // Please the label inside the bar itself.
+        if (self.verticalAlignment == PNBarChartBarLabelVerticalAlignmentTop) {
+            verticalY = topSpace;
+        } else if (self.verticalAlignment == PNBarChartBarLabelVerticalAlignmentBottom) {
+            verticalY = self.bounds.size.height - labelSize.height;
+        } else {
+            // Center Vertical Alignment
+            verticalY = topSpace + (textheight - labelSize.height) / 2.0f;
+        }
+
+    }
+
+    [self.textLayer setFrame:CGRectMake((textWidth-labelSize.width)/2.0,verticalY, labelSize.width,labelSize.height)];
+    self.textLayer.contentsScale = [UIScreen mainScreen].scale;
 }
 
 - (void)setIsShowNumber:(BOOL)isShowNumber{
-  if (isShowNumber) {
-    self.textLayer.hidden = NO;
-    [self setGradeFrame:_copyGrade startPosY:0];
-  }else{
-    self.textLayer.hidden = YES;
-  }
+    if (isShowNumber) {
+        self.textLayer.hidden = NO;
+        [self setGradeFrame:_copyGrade startPosY:0];
+    }else{
+        self.textLayer.hidden = YES;
+    }
 }
 - (void)setIsNegative:(BOOL)isNegative{
-  if (isNegative) {
-    [self.textLayer setString:[[NSString alloc]initWithFormat:@"- %1.f",_grade*self.maxDivisor]];
-    
-    CGSize size = CGSizeMake(320,2000); //设置一个行高上限
-    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
-    size = [self.textLayer.string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
-    CGRect frame = self.textLayer.frame;
-    frame.origin.x = (self.bounds.size.width - size.width)/2.0;
-    frame.size = size;
-    self.textLayer.frame = frame;
-    
-    CABasicAnimation* rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI];
-    [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    rotationAnimation.duration = 0.1;
-    rotationAnimation.repeatCount = 0;//你可以设置到最大的整数值
-    rotationAnimation.cumulative = NO;
-    rotationAnimation.removedOnCompletion = NO;
-    rotationAnimation.fillMode = kCAFillModeForwards;
-    [self.textLayer addAnimation:rotationAnimation forKey:@"Rotation"];
-    
-  }
+    if (isNegative) {
+        [self.textLayer setString:[[NSString alloc]initWithFormat:@"- %1.f",_grade*self.maxDivisor]];
+
+        CGSize size = CGSizeMake(320,2000); //设置一个行高上限
+        NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
+        size = [self.textLayer.string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
+        CGRect frame = self.textLayer.frame;
+        frame.origin.x = (self.bounds.size.width - size.width)/2.0;
+        frame.size = size;
+        self.textLayer.frame = frame;
+
+        CABasicAnimation* rotationAnimation;
+        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI];
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        rotationAnimation.duration = 0.1;
+        rotationAnimation.repeatCount = 0;//你可以设置到最大的整数值
+        rotationAnimation.cumulative = NO;
+        rotationAnimation.removedOnCompletion = NO;
+        rotationAnimation.fillMode = kCAFillModeForwards;
+        [self.textLayer addAnimation:rotationAnimation forKey:@"Rotation"];
+
+    }
 }
 
 -(CABasicAnimation*)fadeAnimation

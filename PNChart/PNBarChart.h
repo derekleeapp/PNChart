@@ -29,6 +29,8 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (nonatomic) NSArray *yLabels;
 @property (nonatomic) NSArray *yValues;
 
+@property (assign, nonatomic) PNBarChartBarLabelVerticalAlignment barLabelVerticalAlignment;
+
 @property (nonatomic) NSMutableArray * bars;
 
 @property (nonatomic) CGFloat xLabelWidth;
