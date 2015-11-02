@@ -60,7 +60,8 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (nonatomic) CGFloat chartMarginBottom;
 
 /** Controls whether labels should be displayed. */
-@property (nonatomic) BOOL showLabel;
+@property (assign, nonatomic) BOOL showXLabels;
+@property (assign, nonatomic) BOOL showYLabels;
 
 /** Controls whether the chart border line should be displayed. */
 @property (nonatomic) BOOL showChartBorder;
