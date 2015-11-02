@@ -9,8 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-@interface PNBar : UIView
+typedef NS_ENUM(NSUInteger, PNBarChartBarLabelVerticalAlignment) {
+    PNBarChartBarLabelVerticalAlignmentUnspecified,
+    PNBarChartBarLabelVerticalAlignmentTop,
+    PNBarChartBarLabelVerticalAlignmentCenter,
+    PNBarChartBarLabelVerticalAlignmentBottom
+};
 
+@interface PNBar : UIView
 
 - (void)rollBack;
 
@@ -24,7 +30,9 @@
 @property (nonatomic) CAShapeLayer *gradientMask;
 
 @property (nonatomic) CAShapeLayer *gradeLayer;
-@property (nonatomic) CATextLayer* textLayer;
+@property (nonatomic) CATextLayer *textLayer;
+
+@property (assign, nonatomic) PNBarChartBarLabelVerticalAlignment verticalAlignment;
 
 /** Text color for all bars in the chart. */
 @property (nonatomic) UIColor * labelTextColor;

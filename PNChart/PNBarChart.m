@@ -239,6 +239,11 @@
                                                           barWidth, // Bar witdh
                                                           self.showLevelLine ? chartCavanHeight/2.0:chartCavanHeight)]; //Bar height
 
+            // Set vertical alignment.
+            if (self.barLabelVerticalAlignment != PNBarChartBarLabelVerticalAlignmentUnspecified) {
+                bar.verticalAlignment = self.barLabelVerticalAlignment;
+            }
+
             //Change Bar Radius
             bar.barRadius = _barRadius;
 
