@@ -53,7 +53,9 @@
     _yValueLabelTextColor = [UIColor grayColor];
     _labelTextColorInsideBar = [UIColor grayColor];
     _labelTextColorAboveBar  = [UIColor grayColor];
-    _labelFont           = [UIFont systemFontOfSize:11.0f];
+    _xValueLabelFont     = [UIFont systemFontOfSize:11.0f];
+    _yValueLabelFont     = [UIFont systemFontOfSize:11.0f];
+    _barValueLabelFont   = [UIFont systemFontOfSize:11.0f];
     _xChartLabels        = [NSMutableArray array];
     _yChartLabels        = [NSMutableArray array];
     _bars                = [NSMutableArray array];
@@ -74,21 +76,21 @@
     _isShowNumbers       = YES;
     _yLabelPrefix        = @"";
     _yLabelSuffix        = @"";
-	_yLabelFormatter = ^(CGFloat yValue){
-		return [NSString stringWithFormat:@"%1.f",yValue];
-	};
+    _yLabelFormatter = ^(CGFloat yValue){
+        return [NSString stringWithFormat:@"%1.f",yValue];
+    };
 }
 
 - (void)setYValues:(NSArray *)yValues
 {
     _yValues = yValues;
-  //make the _yLabelSum value dependant of the distinct values of yValues to avoid duplicates on yAxis
+    //make the _yLabelSum value dependant of the distinct values of yValues to avoid duplicates on yAxis
 
-  if (_showYLabels) {
-    [self __addYCoordinateLabelsValues];
-  } else {
-    [self processYMaxValue];
-  }
+    if (_showYLabels) {
+        [self __addYCoordinateLabelsValues];
+    } else {
+        [self processYMaxValue];
+    }
 }
 
 - (void)processYMaxValue {
@@ -110,33 +112,33 @@
 #pragma mark - Add Y Label
 - (void)__addYCoordinateLabelsValues{
 
-  [self viewCleanupForCollection:_yChartLabels];
+    [self viewCleanupForCollection:_yChartLabels];
 
-  [self processYMaxValue];
+    [self processYMaxValue];
 
-  float sectionHeight = (self.frame.size.height - _chartMarginTop - _chartMarginBottom - kXLabelHeight) / _yLabelSum;
-    
-  for (int i = 0; i <= _yLabelSum; i++) {
-    NSString *labelText;
-    if (_yLabels) {
-      float yAsixValue = [_yLabels[_yLabels.count - i - 1] floatValue];
-      labelText= _yLabelFormatter(yAsixValue);
-    } else {
-      labelText = _yLabelFormatter((float)_yValueMax * ( (_yLabelSum - i) / (float)_yLabelSum ));
+    float sectionHeight = (self.frame.size.height - _chartMarginTop - _chartMarginBottom - kXLabelHeight) / _yLabelSum;
+
+    for (int i = 0; i <= _yLabelSum; i++) {
+        NSString *labelText;
+        if (_yLabels) {
+            float yAsixValue = [_yLabels[_yLabels.count - i - 1] floatValue];
+            labelText= _yLabelFormatter(yAsixValue);
+        } else {
+            labelText = _yLabelFormatter((float)_yValueMax * ( (_yLabelSum - i) / (float)_yLabelSum ));
+        }
+
+        PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:CGRectZero];
+        label.font = _yValueLabelFont;
+        label.textColor = _yValueLabelTextColor;
+        [label setTextAlignment:NSTextAlignmentRight];
+        label.text = [NSString stringWithFormat:@"%@%@%@", _yLabelPrefix, labelText, _yLabelSuffix];
+
+        [self addSubview:label];
+
+        label.frame = (CGRect){0, sectionHeight * i + _chartMarginTop - kYLabelHeight/2.0, _yChartLabelWidth, kYLabelHeight};
+
+        [_yChartLabels addObject:label];
     }
-
-    PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:CGRectZero];
-    label.font = _labelFont;
-    label.textColor = _yValueLabelTextColor;
-    [label setTextAlignment:NSTextAlignmentRight];
-    label.text = [NSString stringWithFormat:@"%@%@%@", _yLabelPrefix, labelText, _yLabelSuffix];
-      
-    [self addSubview:label];
-      
-    label.frame = (CGRect){0, sectionHeight * i + _chartMarginTop - kYLabelHeight/2.0, _yChartLabelWidth, kYLabelHeight};
-
-    [_yChartLabels addObject:label];
-  }
 }
 
 -(void)updateChartData:(NSArray *)data{
@@ -149,7 +151,7 @@
     CGFloat max = [[yLabels valueForKeyPath:@"@max.floatValue"] floatValue];
 
     //ensure max is even
-   _yValueMax = max ;
+    _yValueMax = max ;
 
     if (_yValueMax == 0) {
         _yValueMax = _yMinValue;
@@ -166,7 +168,7 @@
         _xChartLabels = [NSMutableArray new];
     }
 
-	_xLabelWidth = (self.frame.size.width - _chartMarginLeft - _chartMarginRight) / [xLabels count];
+    _xLabelWidth = (self.frame.size.width - _chartMarginLeft - _chartMarginRight) / [xLabels count];
 
     if (_showXLabels) {
         int labelAddCount = 0;
@@ -176,7 +178,7 @@
             if (labelAddCount == _xLabelSkip) {
                 NSString *labelText = [_xLabels[index] description];
                 PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0, 0, _xLabelWidth, kXLabelHeight)];
-                label.font = _labelFont;
+                label.font = _xValueLabelFont;
                 label.textColor = _xValueLabelTextColor;
                 [label setTextAlignment:NSTextAlignmentCenter];
                 label.text = labelText;
@@ -243,6 +245,11 @@
                                                           barWidth, // Bar witdh
                                                           self.showLevelLine ? chartCavanHeight/2.0:chartCavanHeight)]; //Bar height
 
+            // Set the font for the value of the label inside the bar.
+            if (self.barValueLabelFont) {
+                bar.barValueLabelFont = self.barValueLabelFont;
+            }
+
             // Set vertical alignment.
             if (self.barLabelVerticalAlignment != PNBarChartBarLabelVerticalAlignmentUnspecified) {
                 bar.verticalAlignment = self.barLabelVerticalAlignment;
@@ -259,7 +266,7 @@
             }else{
                 bar.barColor = [self barColorAtIndex:index];
             }
-            
+
             if (self.labelTextColorInsideBar) {
                 bar.labelTextColorInsideBar = self.labelTextColorInsideBar;
             }
@@ -270,7 +277,7 @@
 
             // Add gradient
             if (self.isGradientShow) {
-             bar.barColorGradientStart = bar.barColor;
+                bar.barColorGradientStart = bar.barColor;
             }
 
             //For Click Index
@@ -294,14 +301,14 @@
         NSString *currentNumber =  [NSString stringWithFormat:@"%f",value];
 
         if ([[currentNumber substringToIndex:1] isEqualToString:@"-"] && self.showLevelLine) {
-        CGAffineTransform transform =CGAffineTransformMakeRotation(M_PI);
-        [bar setTransform:transform];
-        originalFrame.origin.y = bar.frame.origin.y + bar.frame.size.height;
-        bar.frame = originalFrame;
-        bar.isNegative = YES;
+            CGAffineTransform transform =CGAffineTransformMakeRotation(M_PI);
+            [bar setTransform:transform];
+            originalFrame.origin.y = bar.frame.origin.y + bar.frame.size.height;
+            bar.frame = originalFrame;
+            bar.isNegative = YES;
 
-      }
-      index += 1;
+        }
+        index += 1;
     }
 }
 
@@ -376,41 +383,41 @@
         [self.layer addSublayer:_chartLeftLine];
     }
 
-  // Add Level Separator Line
-  if (_showLevelLine) {
-    _chartLevelLine = [CAShapeLayer layer];
-    _chartLevelLine.lineCap      = kCALineCapButt;
-    _chartLevelLine.fillColor    = [[UIColor whiteColor] CGColor];
-    _chartLevelLine.lineWidth    = 1.0;
-    _chartLevelLine.strokeEnd    = 0.0;
+    // Add Level Separator Line
+    if (_showLevelLine) {
+        _chartLevelLine = [CAShapeLayer layer];
+        _chartLevelLine.lineCap      = kCALineCapButt;
+        _chartLevelLine.fillColor    = [[UIColor whiteColor] CGColor];
+        _chartLevelLine.lineWidth    = 1.0;
+        _chartLevelLine.strokeEnd    = 0.0;
 
-    UIBezierPath *progressline = [UIBezierPath bezierPath];
+        UIBezierPath *progressline = [UIBezierPath bezierPath];
 
-    [progressline moveToPoint:CGPointMake(_chartMarginLeft, (self.frame.size.height - kXLabelHeight )/2.0)];
-    [progressline addLineToPoint:CGPointMake(self.frame.size.width - _chartMarginLeft - _chartMarginRight,  (self.frame.size.height - kXLabelHeight )/2.0)];
+        [progressline moveToPoint:CGPointMake(_chartMarginLeft, (self.frame.size.height - kXLabelHeight )/2.0)];
+        [progressline addLineToPoint:CGPointMake(self.frame.size.width - _chartMarginLeft - _chartMarginRight,  (self.frame.size.height - kXLabelHeight )/2.0)];
 
-    [progressline setLineWidth:1.0];
-    [progressline setLineCapStyle:kCGLineCapSquare];
-    _chartLevelLine.path = progressline.CGPath;
+        [progressline setLineWidth:1.0];
+        [progressline setLineCapStyle:kCGLineCapSquare];
+        _chartLevelLine.path = progressline.CGPath;
 
-    _chartLevelLine.strokeColor = PNLightGrey.CGColor;
+        _chartLevelLine.strokeColor = PNLightGrey.CGColor;
 
-    CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    pathAnimation.duration = 0.5;
-    pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    pathAnimation.fromValue = @0.0f;
-    pathAnimation.toValue = @1.0f;
-    [_chartLevelLine addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
+        CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+        pathAnimation.duration = 0.5;
+        pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        pathAnimation.fromValue = @0.0f;
+        pathAnimation.toValue = @1.0f;
+        [_chartLevelLine addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
 
-    _chartLevelLine.strokeEnd = 1.0;
+        _chartLevelLine.strokeEnd = 1.0;
 
-    [self.layer addSublayer:_chartLevelLine];
-  } else {
-    if (_chartLevelLine) {
-      [_chartLevelLine removeFromSuperlayer];
-      _chartLevelLine = nil;
+        [self.layer addSublayer:_chartLevelLine];
+    } else {
+        if (_chartLevelLine) {
+            [_chartLevelLine removeFromSuperlayer];
+            _chartLevelLine = nil;
+        }
     }
-  }
 }
 
 - (void)viewCleanupForCollection:(NSMutableArray *)array
@@ -448,7 +455,7 @@
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     UIView *subview = [self hitTest:touchPoint withEvent:nil];
-
+    
     if ([subview isKindOfClass:[PNBar class]] && [self.delegate respondsToSelector:@selector(userClickedOnBarAtIndex:)]) {
         [self.delegate userClickedOnBarAtIndex:subview.tag];
     }

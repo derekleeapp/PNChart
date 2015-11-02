@@ -34,6 +34,9 @@ typedef NS_ENUM(NSUInteger, PNBarChartBarLabelVerticalAlignment) {
 
 @property (assign, nonatomic) PNBarChartBarLabelVerticalAlignment verticalAlignment;
 
+/** Font for the label value of the bar. */
+@property (strong, nonatomic) UIFont *barValueLabelFont;
+
 /** Text color for all bars in the chart. */
 @property (strong, nonatomic) UIColor *labelTextColorInsideBar;
 @property (strong, nonatomic) UIColor *labelTextColorAboveBar;
