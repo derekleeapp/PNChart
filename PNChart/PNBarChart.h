@@ -92,7 +92,10 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (nonatomic) UIColor * barBackgroundColor;
 
 /** Text color for all bars in the chart. */
-@property (nonatomic) UIColor * labelTextColor;
+@property (strong, nonatomic) UIColor *xValueLabelTextColor;
+@property (strong, nonatomic) UIColor *yValueLabelTextColor;
+@property (strong, nonatomic) UIColor *labelTextColorInsideBar;
+@property (strong, nonatomic) UIColor *labelTextColorAboveBar;
 
 /** Font for all bars in the chart. */
 @property (nonatomic) UIFont * labelFont;
