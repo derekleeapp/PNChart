@@ -182,17 +182,11 @@
         _textLayer = [[CATextLayer alloc]init];
         [_textLayer setString:@"0"];
         [_textLayer setAlignmentMode:kCAAlignmentCenter];
-        [_textLayer setForegroundColor:[_labelTextColor CGColor]];
+        [_textLayer setForegroundColor:[_labelTextColorInsideBar CGColor]];
         _textLayer.hidden = YES;
-
     }
 
     return _textLayer;
-}
-
-- (void) setLabelTextColor:(UIColor *)labelTextColor {
-    _labelTextColor = labelTextColor;
-    [_textLayer setForegroundColor:[_labelTextColor CGColor]];
 }
 
 -(void)setGradeFrame:(CGFloat)grade startPosY:(CGFloat)startPosY
@@ -215,6 +209,9 @@
 
     // If the height of the label is less than the height of the bar, place the label above the bar.
     if (labelSize.height >= textheight) {
+
+        // Set text color appropriately
+        [_textLayer setForegroundColor:[_labelTextColorAboveBar CGColor]];
 
         if (self.verticalAlignment == PNBarChartBarLabelVerticalAlignmentBottom) {
             // Bottom Vertical Alignment
